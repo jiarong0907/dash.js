@@ -11,7 +11,7 @@
     <link href="../../lib/main.css" rel="stylesheet">
     <link href="main.css" rel="stylesheet">
 
-    <script src="../../../dist/dash.all.debug.js"></script>
+    <script src="https://reference.dashif.org/dash.js/latest/dist/dash.all.debug.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
     <script src="../../../contrib/akamai/controlbar/ControlBar.js"></script>
     <script src="../../lib/sweetalert2/sweetalert2.all.min.js"></script>
@@ -59,7 +59,7 @@
                             <h6>General</h6>
                             <div class="input-group input-group-sm mb-3">
                                 <span class="input-group-text">Target latency (sec)</span>
-                                <input type="number" id="target-latency" class="form-control" value="3"
+                                <input type="number" id="target-latency" class="form-control" value="1"
                                        step="0.5">
                             </div>
                             <div class="input-group input-group-sm mb-3">
@@ -303,15 +303,17 @@
                 </div>
                 <div class="input-group input-group-sm mb-3 mt-2">
                     <span class="input-group-text">Interval (ms)</span>
-                    <input type="number" id="chart-interval" class="form-control" value="300"
+                    <input type="number" id="chart-interval" class="form-control" value="200"
                            step="50" min="200">
                 </div>
                 <div class="input-group input-group-sm mb-3 mt-2">
                     <span class="input-group-text">Number of data points</span>
-                    <input type="number" id="chart-number-of-entries" class="form-control" value="30"
+                    <input type="number" id="chart-number-of-entries" class="form-control" value="50"
                            step="1">
                 </div>
                 <button type="button" id="chart-settings-button" class="btn btn-success">Apply
+                </button>
+                <button type="button" id="save-button" class="btn btn-success">Download
                 </button>
             </div>
         </div>

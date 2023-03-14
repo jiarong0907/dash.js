@@ -1,4 +1,4 @@
-var METRIC_INTERVAL = 300;
+var METRIC_INTERVAL = 200;
 
 var App = function () {
     this.player = null;
@@ -11,12 +11,13 @@ var App = function () {
         chart: {}
     }
     this.chartTimeout = null;
-    this.chartReportingInterval = 300;
-    this.chartNumberOfEntries = 30;
+    this.chartReportingInterval = 200;
+    this.chartNumberOfEntries = 50;
     this.chartData = {
         playbackTime: 0,
         lastTimeStamp: null
     }
+    this.log = "start\n";
 };
 
 App.prototype.init = function () {
@@ -352,6 +353,14 @@ App.prototype._adjustChartSettings = function () {
     this._enableChart(this.domElements.chart.enabled.checked);
 }
 
+App.prototype._save_log = function () {
+    var bb = new Blob([self.log ], { type: 'text/plain' });
+    var a = document.createElement('a');
+    a.download = 'download.txt';
+    a.href = window.URL.createObjectURL(bb);
+    a.click();
+}
+
 
 App.prototype._startIntervalHandler = function () {
     var self = this;
@@ -363,17 +372,31 @@ App.prototype._startIntervalHandler = function () {
             var currentLatency = parseFloat(self.player.getCurrentLiveLatency(), 10);
             self.domElements.metrics.latencyTag.innerHTML = currentLatency + ' secs';
 
+            // console.log('currentLatency: ', currentLatency);
+            this.log = this.log + 'currentLatency: ' + String(currentLatency);
+
             var currentPlaybackRate = self.player.getPlaybackRate();
-            self.domElements.metrics.playbackrateTag.innerHTML = Math.round(currentPlaybackRate * 1000) / 1000;
+            var roundPlaybackRate = Math.round(currentPlaybackRate * 1000) / 1000;
+            self.domElements.metrics.playbackrateTag.innerHTML = roundPlaybackRate;
+            // console.log('roundPlaybackRate: ', roundPlaybackRate);
+            this.log = this.log + ' roundPlaybackRate: ' + String(roundPlaybackRate);
 
             var currentBuffer = dashMetrics.getCurrentBufferLevel('video');
             self.domElements.metrics.bufferTag.innerHTML = currentBuffer + ' secs';
+            // console.log('currentBuffer: ', currentBuffer);
+            this.log = this.log + ' currentBuffer: ' + String(currentBuffer);
 
             var d = new Date();
             var seconds = d.getSeconds();
             self.domElements.metrics.sec.innerHTML = (seconds < 10 ? '0' : '') + seconds;
             var minutes = d.getMinutes();
             self.domElements.metrics.min.innerHTML = (minutes < 10 ? '0' : '') + minutes + ':';
+
+            // console.log('referenceTime: ', minutes, ':',  seconds);
+            this.log = this.log + ' referenceTime: ' + String(minutes) + ':' + String(seconds) + '\n';
+
+            // this.log = this.log + String(minutes);
+            // console.log('concat: ', this.log);
         }
 
     }, METRIC_INTERVAL);
@@ -410,6 +433,10 @@ App.prototype._registerEventHandler = function () {
             showConfirmButton: false,
             timer: 1500
         })
+    })
+
+    document.getElementById('save-button').addEventListener('click', function () {
+        self._save_log();
     })
 }
 
