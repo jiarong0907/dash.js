@@ -1,4 +1,4 @@
-var METRIC_INTERVAL = 500;
+var METRIC_INTERVAL = 200;
 
 var App = function () {
     this.player = null;
@@ -11,13 +11,14 @@ var App = function () {
         chart: {}
     }
     this.chartTimeout = null;
-    this.chartReportingInterval = 500;
+    this.chartReportingInterval = 200;
     this.chartNumberOfEntries = 50;
     this.chartData = {
         playbackTime: 0,
         lastTimeStamp: null
     }
     this.log = "start\n";
+    this.current_bitrate = "start";
 };
 
 App.prototype.init = function () {
@@ -393,7 +394,8 @@ App.prototype._startIntervalHandler = function () {
             self.domElements.metrics.min.innerHTML = (minutes < 10 ? '0' : '') + minutes + ':';
 
             // console.log('referenceTime: ', minutes, ':',  seconds);
-            this.log = this.log + ' referenceTime: ' + String(minutes) + ':' + String(seconds) + '\n';
+            this.log = this.log + ' referenceTime: ' + String(minutes) + ':' + String(seconds);
+            this.log = this.log + ' birate: ' + this.current_bitrate + '\n';
 
             // this.log = this.log + String(minutes);
             // console.log('concat: ', this.log);
@@ -455,6 +457,7 @@ App.prototype._onRepresentationSwitch = function (e) {
             this.domElements.metrics.videoIndex.innerHTML = e.currentRepresentation.index + 1;
             var bitrate = Math.round(e.currentRepresentation.bandwidth / 1000);
             this.domElements.metrics.videoBitrate.innerHTML = bitrate;
+            self.current_bitrate = String(bitrate);
         }
     } catch (e) {
 
